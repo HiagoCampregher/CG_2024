@@ -38,7 +38,6 @@ namespace gcgcg
 
         private bool mouseMovtoPrimeiro = true;
         private Ponto4D mouseMovtoUltimo;
-        //private Vector2 _lastPos;
 
         public Mundo(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
                : base(gameWindowSettings, nativeWindowSettings)
@@ -65,11 +64,62 @@ namespace gcgcg
             _shaderAzul = new Shader("Shaders/shader.vert", "Shaders/shaderAzul.frag");
             #endregion
 
-
+            #region Objeto: retângulo  
             objetoSelecionado = new Retangulo(mundo, ref rotuloAtual, new Ponto4D(-0.5, -0.5), new Ponto4D(0.5, 0.5));
-            objetoSelecionado.shaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderMagenta.frag");
+            objetoSelecionado.ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderMagenta.frag");
+            #endregion
 
-            mundo.FilhoAdicionar(objetoSelecionado);
+#if CG_Privado
+            #region Objeto: polígono qualquer  
+            List<Ponto4D> pontosPoligono =
+            [
+                new Ponto4D(0.25, 0.25),
+                new Ponto4D(0.75, 0.25),
+                new Ponto4D(0.75, 0.75),
+                new Ponto4D(0.50, 0.50),
+                new Ponto4D(0.25, 0.75),
+            ];
+            objetoSelecionado = new Poligono(mundo, ref rotuloAtual, pontosPoligono);
+            #endregion
+            #region NÃO USAR: declara um objeto filho ao polígono
+            objetoSelecionado = new Ponto(objetoSelecionado, ref rotuloAtual, new Ponto4D(0.50, 0.75));
+            objetoSelecionado.ToString();
+            #endregion
+
+            #region Objeto: segmento de reta  
+            objetoSelecionado = new SegReta(mundo, ref rotuloAtual, new Ponto4D(-0.25, -0.25), new Ponto4D(-0.75, -0.75));
+            #endregion
+
+            #region Objeto: ponto  
+            objetoSelecionado = new Ponto(mundo, ref rotuloAtual, new Ponto4D(0.25, -0.25))
+            {
+                PrimitivaTipo = PrimitiveType.Points,
+                PrimitivaTamanho = 10
+            };
+            #endregion
+
+            #region Objeto: circulo - origem
+            objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.2)
+            {
+                ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
+            };
+            #endregion
+            #region Objeto: circulo
+            objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.1, new Ponto4D(0.0, -0.5))
+            {
+                ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderAmarela.frag")
+            };
+            #endregion
+
+            #region Objeto: SrPalito  
+            objetoSelecionado = new SrPalito(mundo, ref rotuloAtual);
+            #endregion
+
+            #region Objeto: Spline
+            objetoSelecionado = new Spline(mundo, ref rotuloAtual);
+            #endregion
+#endif
+
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -85,20 +135,6 @@ namespace gcgcg
             SwapBuffers();
         }
 
-        PrimitiveType[] tipos = new PrimitiveType[]
-        {
-            PrimitiveType.Points,
-            PrimitiveType.Lines,
-            PrimitiveType.LineLoop,
-            PrimitiveType.LineStrip,
-            PrimitiveType.Triangles,
-            PrimitiveType.TriangleStrip,
-            PrimitiveType.TriangleFan,
-            PrimitiveType.Quads
-        };
-
-        int iContadorEspaco = 0;
-
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
@@ -109,40 +145,27 @@ namespace gcgcg
             {
                 Close();
             }
-            else
+            if (input.IsKeyPressed(Keys.Right))
             {
-                if (input.IsKeyPressed(Keys.Right))
-                {
-                    objetoSelecionado.PontosAlterar(new Ponto4D(objetoSelecionado.PontosId(0).X + 0.005, objetoSelecionado.PontosId(0).Y, 0), 0);
-                    objetoSelecionado.ObjetoAtualizar();
-                }
+                objetoSelecionado.PontosAlterar(new Ponto4D(objetoSelecionado.PontosId(0).X + 0.005, objetoSelecionado.PontosId(0).Y, 0), 0);
+                objetoSelecionado.ObjetoAtualizar();
+            }
+            if (input.IsKeyPressed(Keys.P))
+            {
+                Console.WriteLine(objetoSelecionado);
+            }
+            if (input.IsKeyPressed(Keys.Space))
+            {
+                if (objetoSelecionado.PrimitivaTipo == PrimitiveType.TriangleFan)
+                    objetoSelecionado.PrimitivaTipo = PrimitiveType.Points;
                 else
-                {
-                    if (input.IsKeyPressed(Keys.P))
-                    {
-                        Console.WriteLine(objetoSelecionado);
-                    }
-                    else
-                    {
-                        if (input.IsKeyPressed(Keys.Space))
-                        {
-                            objetoSelecionado.PrimitivaTipo = tipos[iContadorEspaco++];
+                    objetoSelecionado.PrimitivaTipo++;
 
-                            if (iContadorEspaco == tipos.Length - 1)
-                                iContadorEspaco = 0;
-
-                            objetoSelecionado.shaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderMagenta.frag");
-                            objetoSelecionado.ObjetoAtualizar();
-                        }
-                        else
-                        {
-                            if (input.IsKeyPressed(Keys.C))
-                            {
-                                objetoSelecionado.shaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderCiano.frag");
-                            }
-                        }
-                    }
-                }
+                objetoSelecionado.ObjetoAtualizar();
+            }
+            if (input.IsKeyPressed(Keys.C))
+            {
+                objetoSelecionado.ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderCiano.frag");
             }
             #endregion
 

@@ -8,22 +8,15 @@ namespace gcgcg
     {
         private double raio = 0;
 
-        public Circulo(Objeto _paiRef, ref char _rotulo, int _quantidadePontos, int _tamanhoPonto, double _raio) : base(_paiRef, ref _rotulo)
+        public Circulo(Objeto _paiRef, ref char _rotulo, double _raio) : base(_paiRef, ref _rotulo)
         {
-            // Quantidade pontos
-            // raio
-            // tamanho 5
-
             PrimitivaTipo = PrimitiveType.Points;
-            PrimitivaTamanho = _tamanhoPonto;
             raio = _raio;
 
-
-
-            double anguloCalculado = Convert.ToDouble(360 / _quantidadePontos);
+            double anguloCalculado = Convert.ToDouble(360 / 72);
 
             double anguloDeslocado = 0;
-            for (int idx = 0; idx < _quantidadePontos; ++idx)
+            for (int idx = 0; idx < 72; ++idx)
             {
                 anguloDeslocado += anguloCalculado;
                 Ponto4D ponto = Matematica.GerarPtosCirculo(anguloDeslocado, raio);

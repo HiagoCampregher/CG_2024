@@ -8,22 +8,15 @@ namespace gcgcg
     {
         private double raio = 0;
 
-        public Circulo(Objeto _paiRef, ref char _rotulo, double _raio, int _quantidadePontos, int _tamanhoPonto) : base(_paiRef, ref _rotulo)
+        public Circulo(Objeto _paiRef, ref char _rotulo, double _raio) : base(_paiRef, ref _rotulo)
         {
-            // Quantidade pontos
-            // raio
-            // tamanho 5
-
             PrimitivaTipo = PrimitiveType.Points;
-            PrimitivaTamanho = _tamanhoPonto;
             raio = _raio;
 
-
-
-            double anguloCalculado = Convert.ToDouble(360 / _quantidadePontos);
+            double anguloCalculado = Convert.ToDouble(360 / 72);
 
             double anguloDeslocado = 0;
-            for (int idx = 0; idx < _quantidadePontos; ++idx)
+            for (int idx = 0; idx < 72; ++idx)
             {
                 anguloDeslocado += anguloCalculado;
                 Ponto4D ponto = Matematica.GerarPtosCirculo(anguloDeslocado, raio);
@@ -31,10 +24,29 @@ namespace gcgcg
                 PontosAdicionar(ponto);
             }
 
-            Atualizar();
+            //Atualizar();
         }
 
-        private void Atualizar()
+        public Circulo(Objeto _paiRef, ref char _rotulo, double _raio, Ponto4D ptoDeslocamento) : base(_paiRef, ref _rotulo)
+        {
+            PrimitivaTipo = PrimitiveType.Points;
+            raio = _raio;
+
+            double anguloCalculado = Convert.ToDouble(360 / 72);
+
+            double anguloDeslocado = 0;
+            for (int idx = 0; idx < 72; ++idx)
+            {
+                anguloDeslocado += anguloCalculado;
+                Ponto4D ponto = Matematica.GerarPtosCirculo(anguloDeslocado, raio);
+
+                PontosAdicionar(ponto);
+            }
+
+            //Atualizar();
+        }
+
+        private void Atualizar(Ponto4D ptoDeslocamento)
         {
 
             base.ObjetoAtualizar();

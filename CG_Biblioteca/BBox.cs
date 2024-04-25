@@ -26,7 +26,6 @@ namespace CG_Biblioteca
       // FIXME: deveria ser removido na classe BBox.
       //GL.DeleteBuffer(_vertexBufferObject_bbox);
       //GL.DeleteVertexArray(_vertexArrayObject_bbox);
-
     }
 
     public void Atualizar(Transformacao4D matriz, List<Ponto4D> pontosLista)
