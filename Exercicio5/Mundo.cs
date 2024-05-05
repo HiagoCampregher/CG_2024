@@ -12,6 +12,7 @@ using OpenTK.Windowing.Desktop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using gcgcg;
 // using OpenTK.Mathematics;
 
 namespace gcgcg
@@ -36,7 +37,7 @@ namespace gcgcg
         private Shader _shaderVermelha;
         private Shader _shaderVerde;
         private Shader _shaderAzul;
-
+        private Joystick _joystick;
         private bool mouseMovtoPrimeiro = true;
         private Ponto4D mouseMovtoUltimo;
 
@@ -65,43 +66,9 @@ namespace gcgcg
             _shaderAzul = new Shader("Shaders/shader.vert", "Shaders/shaderAzul.frag");
             #endregion
 
-            double raio = 0.30;
-            Ponto4D ptoDeslocamento = new Ponto4D(0.3, 0.3);
 
-            Ponto4D pontoSupDir = Matematica.GerarPtosCirculo(45, raio);
-            double deslocamento = pontoSupDir.X; 
-
-            pontoSupDir.X += 0.3;
-            pontoSupDir.Y += 0.3;
-
-            Ponto4D pontoInfEsq = new Ponto4D();
-            pontoInfEsq.X = 0.3 + (deslocamento * -1);
-            pontoInfEsq.Y = 0.3 + (deslocamento * -1);
-
-            #region Objeto: retângulo  
-            objetoSelecionado = new Retangulo(mundo, ref rotuloAtual, pontoInfEsq, pontoSupDir)
-            {
-                PrimitivaTipo = PrimitiveType.LineLoop
-            };
-            #endregion
-
-            #region Objeto: circulo - maior
-            objetoSelecionado = new Circulo(mundo, ref rotuloAtual, raio, ptoDeslocamento);
-            objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
-            #endregion
-
-            #region Objeto:circulo - menor
-            objetoSelecionado = new Circulo(mundo, ref rotuloAtual, 0.10, ptoDeslocamento); // qual o raio certo?
-            objetoSelecionado.PrimitivaTipo = PrimitiveType.LineLoop;
-            #endregion
-
-            #region Objeto: ponto
-            objetoSelecionado = new Ponto(mundo, ref rotuloAtual, ptoDeslocamento)
-            {
-                PrimitivaTipo = PrimitiveType.Points,
-                PrimitivaTamanho = 10
-            };
-            #endregion
+            _joystick = new Joystick(mundo, ref rotuloAtual);
+            objetoSelecionado = _joystick.ObjetoSelecionado;
 
 #if CG_Privado
             #region Objeto: polígono qualquer  
@@ -153,29 +120,21 @@ namespace gcgcg
 
             #region Teclado
             var input = KeyboardState;
-            if (input.IsKeyPressed(Keys.Escape))
-            {
-                Close();
-            }
-            if (input.IsKeyPressed(Keys.Right))
-            {
-                objetoSelecionado.PontosAlterar(new Ponto4D(objetoSelecionado.PontosId(0).X + 0.005, objetoSelecionado.PontosId(0).Y, 0), 0);
-                objetoSelecionado.ObjetoAtualizar();
-            }
-            if (input.IsKeyPressed(Keys.P))
-            {
-                Console.WriteLine(objetoSelecionado);
-            }
-            if (input.IsKeyPressed(Keys.Space))
-            {
-                objetoSelecionado ??= mundo;
-                objetoSelecionado = mundo.GrafocenaBuscaProximo(objetoSelecionado);
-            }
             if (input.IsKeyPressed(Keys.C))
             {
-                objetoSelecionado.PontosAlterar(new Ponto4D(objetoSelecionado.PontosId(0).X, objetoSelecionado.PontosId(0).Y + 0.010, 0), 0);
-
-                objetoSelecionado.Bbox();
+                _joystick.MoveCima();
+            }
+            else if (input.IsKeyPressed(Keys.B))
+            {
+                _joystick.MoveBaixo();
+            }
+            else if (input.IsKeyPressed(Keys.E))
+            {
+                _joystick.MoveEsquerda();
+            }
+            else if (input.IsKeyPressed(Keys.D))
+            {
+                _joystick.MoveDireita();
             }
 
             #endregion
