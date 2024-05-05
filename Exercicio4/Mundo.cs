@@ -143,58 +143,9 @@ namespace gcgcg
 
             #region Teclado
             var input = KeyboardState;
-            if (input.IsKeyPressed(Keys.Escape))
-            {
-                Close();
-            }
-            if (input.IsKeyPressed(Keys.Right))
-            {
-                objetoSelecionado.PontosAlterar(new Ponto4D(objetoSelecionado.PontosId(0).X + 0.005, objetoSelecionado.PontosId(0).Y, 0), 0);
-                objetoSelecionado.ObjetoAtualizar();
-            }
-            if (input.IsKeyPressed(Keys.P))
-            {
-                Console.WriteLine(objetoSelecionado);
-            }
-            if (input.IsKeyPressed(Keys.Space))
-            {
-                objetoSelecionado ??= mundo;
-                objetoSelecionado = mundo.GrafocenaBuscaProximo(objetoSelecionado);
-            }
-            if (input.IsKeyPressed(Keys.C))
-            {
-                objetoSelecionado.ShaderObjeto = new Shader("Shaders/shader.vert", "Shaders/shaderCiano.frag");
-            }
-            if (input.IsKeyPressed(Keys.Q))
-            {
-                SrPalito palito = (SrPalito) objetoSelecionado;
-                palito.AtualizarPe(-0.05);
-            }
-            if (input.IsKeyPressed(Keys.W))
-            {
-                SrPalito palito = (SrPalito)objetoSelecionado;
-                palito.AtualizarPe(0.05);
-            }
-            if (input.IsKeyPressed(Keys.A))
-            {
-                SrPalito palito = (SrPalito)objetoSelecionado;
-                palito.AtualizarRaio(-0.05);
-            }
-            if (input.IsKeyPressed(Keys.S))
-            {
-                SrPalito palito = (SrPalito)objetoSelecionado;
-                palito.AtualizarRaio(0.05);
-            }
-            if (input.IsKeyPressed(Keys.Z))
-            {
-                SrPalito palito = (SrPalito)objetoSelecionado;
-                palito.AtualizarAngulo(-5);
-            }
-            if (input.IsKeyPressed(Keys.X))
-            {
-                SrPalito palito = (SrPalito)objetoSelecionado;
-                palito.AtualizarAngulo(5);
-            }
+
+            Spline spline = (Spline) objetoSelecionado;
+            spline.AlterarPonto(input);
 
             #endregion
 
