@@ -145,7 +145,55 @@ namespace gcgcg
             var input = KeyboardState;
 
             Spline spline = (Spline) objetoSelecionado;
-            spline.AlterarPonto(input);
+
+            if (input.IsKeyPressed(Keys.Space))
+            {
+                spline.indexPonto++;
+                if (spline.indexPonto == 4)
+                    spline.indexPonto = 0;
+            }
+            if (input.IsKeyPressed(Keys.C))
+            {
+                Ponto pontoSelecionado = spline.pontos[spline.indexPonto];
+                Ponto4D ponto4D = pontoSelecionado.PontosId(0);
+                ponto4D.Y += 0.1;
+
+                pontoSelecionado.PontosAlterar(ponto4D, 0);
+            }
+            if (input.IsKeyPressed(Keys.B))
+            {
+                Ponto pontoSelecionado = spline.pontos[spline.indexPonto];
+                Ponto4D ponto4D = pontoSelecionado.PontosId(0);
+                ponto4D.Y -= 0.1;
+
+                pontoSelecionado.PontosAlterar(ponto4D, 0);
+            }
+            if (input.IsKeyPressed(Keys.E))
+            {
+                Ponto pontoSelecionado = spline.pontos[spline.indexPonto];
+                Ponto4D ponto4D = pontoSelecionado.PontosId(0);
+                ponto4D.X -= 0.1;
+
+                pontoSelecionado.PontosAlterar(ponto4D, 0);
+            }
+            if (input.IsKeyPressed(Keys.D))
+            {
+                Ponto pontoSelecionado = spline.pontos[spline.indexPonto];
+                Ponto4D ponto4D = pontoSelecionado.PontosId(0);
+                ponto4D.X += 0.1;
+
+                pontoSelecionado.PontosAlterar(ponto4D, 0);
+            }
+            if (input.IsKeyPressed(Keys.Equal))
+            {
+                spline.SplineQtdPto(1);
+            }
+            if (input.IsKeyPressed(Keys.Comma))
+            {
+                spline.SplineQtdPto(-1);
+            }
+
+            spline.Atualizar();
 
             #endregion
 

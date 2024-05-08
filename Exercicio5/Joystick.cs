@@ -34,6 +34,8 @@ internal class Joystick
 
         _retangulo = new Retangulo(paiRef, ref rotulo, pontoInfEsq, pontoSupDir);
         _circuloMaior = new Circulo(paiRef, ref rotulo, raio, ptoDeslocamento);
+        _circuloMaior.PrimitivaTipo = PrimitiveType.LineLoop;
+        _circuloMaior.PrimitivaTipo = PrimitiveType.LineLoop;
 
         _ponto = new Ponto(paiRef, ref rotulo, ptoDeslocamento)
         {
@@ -41,29 +43,30 @@ internal class Joystick
         };
 
         _circuloMenor = new Circulo(paiRef, ref rotulo, 0.10, ptoDeslocamento);
+        _circuloMenor.PrimitivaTipo = PrimitiveType.LineLoop;
     }
 
     public void MoveDireita()
     {
-        Ponto4D novoPonto = new(_ponto.PontoElemento.X + INCREMENTO_DESLOCAMENTO, _ponto.PontoElemento.Y);
+        Ponto4D novoPonto = new(_ponto.PontosId(0).X + INCREMENTO_DESLOCAMENTO, _ponto.PontosId(0).Y);
         Deslocar(novoPonto);
     }
 
     public void MoveEsquerda()
     {
-        Ponto4D novoPonto = new(_ponto.PontoElemento.X - INCREMENTO_DESLOCAMENTO, _ponto.PontoElemento.Y);
+        Ponto4D novoPonto = new(_ponto.PontosId(0).X - INCREMENTO_DESLOCAMENTO, _ponto.PontosId(0).Y);
         Deslocar(novoPonto);
     }
 
     public void MoveCima()
     {
-        Ponto4D novoPonto = new(_ponto.PontoElemento.X, _ponto.PontoElemento.Y + INCREMENTO_DESLOCAMENTO);
+        Ponto4D novoPonto = new(_ponto.PontosId(0).X, _ponto.PontosId(0).Y + INCREMENTO_DESLOCAMENTO);
         Deslocar(novoPonto);
     }
 
     public void MoveBaixo()
     {
-        Ponto4D novoPonto = new(_ponto.PontoElemento.X, _ponto.PontoElemento.Y - INCREMENTO_DESLOCAMENTO);
+        Ponto4D novoPonto = new(_ponto.PontosId(0).X, _ponto.PontosId(0).Y - INCREMENTO_DESLOCAMENTO);
         Deslocar(novoPonto);
     }
 
@@ -75,13 +78,13 @@ internal class Joystick
         }
         else
         {
-            if (Matematica.distanciaQuadrado(novoPonto, _circuloMaior.PontoCentral) > Math.Pow(_circuloMaior.Raio, 2))
+            if (Matematica.distanciaQuadrado(novoPonto, _circuloMaior.PontoDeslocamento) > Math.Pow(_circuloMaior.raio, 2))
                 return;
 
             _retangulo.PrimitivaTipo = PrimitiveType.Points;
         }
 
-        _ponto.Deslocar(novoPonto);
-        _circuloMenor.Deslocar(novoPonto);
+        _ponto.PontosAlterar(novoPonto, 0);
+        _circuloMenor.Atualizar(novoPonto);
     }
 }
